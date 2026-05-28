@@ -3,19 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Track Calc</title>
+<title>VeloDial</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0a0a10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="TrackCalc">
+<meta name="apple-mobile-web-app-title" content="VeloDial">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <style>
 :root {
   --bg:#0a0a10; --surface:#12121b; --card:#181824; --card2:#1e1e2c;
   --accent:#f5c400; --accent2:#ff6b35; --accent3:#4ab4ff;
   --green:#3ddc84; --text:#e8e8f0; --muted:#6b6b88; --border:#242434; --red:#ff5555;
+  --gear-fill:#2a2a3a; --gear-stroke:#f5c400; --gear-hub:#0a0a10;
 }
+body[data-theme="outdoor"] {
+  --bg:#ffffff; --surface:#f3f4f6; --card:#ffffff; --card2:#e9ecef;
+  --accent:#ff5500; --accent2:#0a84ff; --accent3:#0066cc;
+  --green:#0a8b3a; --text:#000000; --muted:#444444; --border:#000000; --red:#cc0000;
+  --gear-fill:#fff7e6; --gear-stroke:#ff5500; --gear-hub:#000000;
+}
+body[data-theme="outdoor"] .card{border-width:2px;}
+body[data-theme="outdoor"] .btn{border-width:2px;font-weight:700;color:#000;}
+body[data-theme="outdoor"] .seg button{border-width:2px;color:#000;font-weight:800;}
+body[data-theme="outdoor"] .seg button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+body[data-theme="outdoor"] .ev-tab{border-width:2px;color:#000;font-weight:800;}
+body[data-theme="outdoor"] .ev-tab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;min-height:100vh;padding:16px;}
 
@@ -56,11 +69,36 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;background:var(--border);outline:none;cursor:pointer;}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 0 3px rgba(245,196,0,.15);}
 input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196,0,.25);}
+.tire-select{width:100%;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font:inherit;font-size:.9rem;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23f5c500' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
 
 /* gear chip */
 .gear-chip{text-align:center;background:var(--surface);border-radius:10px;padding:10px;margin-top:12px;}
 .gear-big{font-size:1.8rem;font-weight:800;color:var(--accent2);letter-spacing:.04em;font-variant-numeric:tabular-nums;}
 .gear-sub{font-size:.66rem;color:var(--muted);margin-top:2px;}
+
+/* gear dial */
+.gear-pair{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:6px;}
+.gear-dial{flex:1;display:flex;flex-direction:column;align-items:center;background:var(--surface);border-radius:14px;padding:10px 6px 10px;border:1px solid var(--border);user-select:none;-webkit-user-select:none;touch-action:none;}
+.gear-label{font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:6px;}
+.gear-svg{width:84px;height:84px;cursor:grab;transition:transform .04s linear;display:block;}
+.gear-svg-rear{width:60px;height:60px;}
+.gear-svg:active{cursor:grabbing;}
+.gear-body{fill:var(--gear-fill);stroke:var(--gear-stroke);stroke-width:1.6;stroke-linejoin:round;}
+.gear-spider{fill:var(--gear-fill);stroke:var(--gear-stroke);stroke-width:1.2;stroke-linejoin:round;}
+.gear-hub{fill:var(--gear-fill);stroke:var(--gear-stroke);stroke-width:1.4;}
+.gear-bore{fill:var(--gear-hub);stroke:var(--gear-stroke);stroke-width:1;}
+.gear-bolt{fill:var(--gear-hub);stroke:var(--gear-stroke);stroke-width:.6;}
+.gear-cutout{fill:var(--gear-hub);stroke:var(--gear-stroke);stroke-width:.4;}
+.gear-num{font-size:1.6rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;margin-top:-2px;letter-spacing:-.02em;}
+.gear-t{font-size:.7rem;color:var(--muted);font-weight:600;margin-left:1px;}
+.gear-times{font-size:1.4rem;font-weight:800;color:var(--muted);padding:0 2px;}
+.gear-ctrl{display:flex;gap:6px;margin-top:6px;}
+.gear-btn{width:38px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:1.1rem;font-weight:800;cursor:pointer;font-family:inherit;line-height:1;transition:all .1s;-webkit-tap-highlight-color:transparent;}
+.gear-btn:active{background:var(--accent);color:#000;border-color:var(--accent);transform:scale(.96);}
+
+/* theme toggle */
+.theme-toggle{padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:1rem;cursor:pointer;font-family:inherit;line-height:1;flex-shrink:0;}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
 
 /* first lap input */
 .lap-input-wrap{display:flex;align-items:center;gap:8px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;transition:border-color .15s;}
@@ -116,15 +154,25 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
 /* split table */
 .split-wrap{overflow-x:auto;}
 .split-table{width:100%;border-collapse:collapse;}
-.split-table th{font-size:.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:4px 8px;border-bottom:1px solid var(--border);}
+.split-table th{font-size:.57rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:4px 5px;border-bottom:1px solid var(--border);white-space:nowrap;}
 .split-table th:not(:first-child){text-align:right;}
-.split-table td{font-size:.8rem;padding:6px 8px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
+.split-table td{font-size:.78rem;padding:5px 5px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;white-space:nowrap;}
 .split-table td:not(:first-child){text-align:right;}
 .split-table tr:last-child td{border-bottom:none;}
 .split-table tr.lap-start td{color:var(--accent);}
 .split-table tr.half-row td{color:var(--muted);font-size:.74rem;}
 .split-table td.elapsed{color:var(--accent3);}
 .split-table td.lap-num{font-weight:700;color:var(--text);}
+.lap-edit{width:62px;padding:3px 5px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font:inherit;font-size:.76rem;font-variant-numeric:tabular-nums;text-align:right;font-family:inherit;outline:none;-moz-appearance:textfield;}
+.lap-edit::-webkit-outer-spin-button,.lap-edit::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.lap-edit:focus{border-color:var(--accent);}
+.lap-edit-user{color:var(--accent);font-weight:700;border-color:var(--accent);}
+.lap-edit-predicted{color:var(--accent3);font-weight:600;border-style:dashed;}
+.lap-edit-default{color:var(--muted);}
+.lap-delta{font-size:.74rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.lap-delta.pos{color:var(--red);}
+.lap-delta.neg{color:var(--green);}
+.lap-delta.zero{color:var(--muted);}
 .start-marker{font-size:.6rem;color:var(--accent2);margin-left:4px;}
 
 /* history */
@@ -137,6 +185,7 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
 .history-toggle.open .h-arrow{transform:rotate(180deg);}
 .history-body{display:none;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden;}
 .history-body.open{display:block;}
+.h-toolbar{display:flex;justify-content:flex-end;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--card2);}
 .h-empty{padding:20px;text-align:center;font-size:.8rem;color:var(--muted);}
 .h-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
 .h-row:last-child{border-bottom:none;}
@@ -154,7 +203,7 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
 
 <!-- topbar -->
 <div class="topbar">
-  <div class="app-title">Track Calc</div>
+  <div class="app-title">VeloDial</div>
   <div class="venue-chip">
     <div class="dot" id="locDot"></div>
     <div class="venue-name" id="venueName">-</div>
@@ -162,6 +211,7 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
   <button class="btn" id="locBtn" onclick="getLocation()">-</button>
   <button class="btn primary" id="saveBtn" onclick="saveRecord()">-</button>
   <button class="btn lang" id="langBtn" onclick="toggleLang()">EN</button>
+  <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()" aria-label="theme">☀</button>
 </div>
 
 <!-- track bar -->
@@ -181,19 +231,51 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
   <div class="col">
     <div class="card">
       <div class="card-label" data-i18n="gear.title"></div>
+      <div class="gear-pair">
+        <div class="gear-dial" id="frontDial" data-min="45" data-max="70" data-val="49">
+          <div class="gear-label" data-i18n="gear.front"></div>
+          <svg class="gear-svg" id="svgFront" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+          <div class="gear-num"><span id="vFront">49</span><span class="gear-t">T</span></div>
+          <div class="gear-ctrl">
+            <button type="button" class="gear-btn" data-dial="frontDial" data-dir="-1">−</button>
+            <button type="button" class="gear-btn" data-dial="frontDial" data-dir="1">+</button>
+          </div>
+        </div>
+        <div class="gear-times">×</div>
+        <div class="gear-dial" id="rearDial" data-min="10" data-max="20" data-val="14">
+          <div class="gear-label" data-i18n="gear.rear"></div>
+          <svg class="gear-svg gear-svg-rear" id="svgRear" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+          <div class="gear-num"><span id="vRear">14</span><span class="gear-t">T</span></div>
+          <div class="gear-ctrl">
+            <button type="button" class="gear-btn" data-dial="rearDial" data-dir="-1">−</button>
+            <button type="button" class="gear-btn" data-dial="rearDial" data-dir="1">+</button>
+          </div>
+        </div>
+      </div>
+      <!-- compat hidden inputs (keep API for calc()) -->
+      <input type="hidden" id="front" value="49">
+      <input type="hidden" id="rear" value="14">
       <div class="s-row">
         <div class="s-head">
-          <span class="s-name" data-i18n="gear.front"></span>
-          <span><span class="s-val" id="vFront">49</span><span class="s-unit">T</span></span>
+          <span class="s-name" data-i18n="tire.circ"></span>
+          <span><span class="s-val" id="vTireC">2096</span><span class="s-unit">mm</span></span>
         </div>
-        <input type="range" id="front" min="8" max="80" value="49" step="1" oninput="calc()">
+        <select id="tireC" onchange="calc()" class="tire-select">
+          <option value="2080">700×19C (2080mm)</option>
+          <option value="2086">700×20C (2086mm)</option>
+          <option value="2096" selected>700×23C (2096mm)</option>
+          <option value="2105">700×25C (2105mm)</option>
+          <option value="2136">700×28C (2136mm)</option>
+          <option value="2155">700×32C (2155mm)</option>
+          <option value="2174">700×35C (2174mm)</option>
+        </select>
       </div>
       <div class="s-row">
         <div class="s-head">
-          <span class="s-name" data-i18n="gear.rear"></span>
-          <span><span class="s-val" id="vRear">14</span><span class="s-unit">T</span></span>
+          <span class="s-name" data-i18n="tire.width"></span>
+          <span><span class="s-val" id="vTireW">23</span><span class="s-unit">mm</span></span>
         </div>
-        <input type="range" id="rear" min="8" max="80" value="14" step="1" oninput="calc()">
+        <input type="range" id="tireW" min="16" max="45" value="23" step="1" oninput="calc()">
       </div>
       <div class="gear-chip">
         <div class="gear-big" id="gearLabel">49 × 14</div>
@@ -284,6 +366,8 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
                 <th data-i18n="split.dist"></th>
                 <th data-i18n="split.split"></th>
                 <th data-i18n="split.elapsed"></th>
+                <th data-i18n="split.lapTarget"></th>
+                <th data-i18n="split.delta"></th>
               </tr>
             </thead>
             <tbody id="splitBody"></tbody>
@@ -304,6 +388,9 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
     </div>
   </button>
   <div class="history-body" id="histBody">
+    <div class="h-toolbar">
+      <button class="btn" id="exportCsvBtn" onclick="exportCsv()" data-i18n="hist.exportCsv"></button>
+    </div>
     <div class="h-empty" id="hEmpty" data-i18n="hist.empty"></div>
     <div id="hList"></div>
   </div>
@@ -314,43 +401,47 @@ input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(245,196
 let _actx = null;
 const _prevVals = {};
 
+// real bicycle freewheel click (single pawl tick), 44100Hz mono int16 PCM, base64
+const CLICK_SR = 44100;
+const CLICK_B64 = "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";
+let _clickBuf = null;
+
 function _getCtx() {
   if (!_actx) _actx = new (window.AudioContext || window.webkitAudioContext)();
   if (_actx.state === 'suspended') _actx.resume();
   return _actx;
 }
 
+function _decodeClick(ctx) {
+  if (_clickBuf) return _clickBuf;
+  const bin = atob(CLICK_B64);
+  const n = bin.length / 2;
+  const buf = ctx.createBuffer(1, n, CLICK_SR);
+  const ch = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) {
+    // little-endian int16 → float
+    let v = bin.charCodeAt(i*2) | (bin.charCodeAt(i*2+1) << 8);
+    if (v >= 32768) v -= 65536;
+    ch[i] = v / 32768;
+  }
+  _clickBuf = buf;
+  return buf;
+}
+
 function playClick() {
   const ctx = _getCtx();
-  const now = ctx.currentTime;
+  const buf = _decodeClick(ctx);
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  // slight random pitch per click so rapid turns sound natural, not machine-gun
+  src.playbackRate.value = 0.97 + Math.random() * 0.06;
+  const g = ctx.createGain();
+  g.gain.value = 0.9;
+  src.connect(g); g.connect(ctx.destination);
+  src.start();
 
-  // iOS-style tock: very short bandpass noise burst
-  const bufLen = Math.floor(ctx.sampleRate * 0.009);
-  const buf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
-
-  const ns = ctx.createBufferSource();
-  ns.buffer = buf;
-
-  // two bandpass layers — body + snap
-  const bp1 = ctx.createBiquadFilter();
-  bp1.type = 'bandpass'; bp1.frequency.value = 1100; bp1.Q.value = 2.0;
-
-  const bp2 = ctx.createBiquadFilter();
-  bp2.type = 'bandpass'; bp2.frequency.value = 3200; bp2.Q.value = 1.2;
-
-  const g1 = ctx.createGain();
-  g1.gain.setValueAtTime(0.55, now);
-  g1.gain.exponentialRampToValueAtTime(0.0001, now + 0.008);
-
-  const g2 = ctx.createGain();
-  g2.gain.setValueAtTime(0.25, now);
-  g2.gain.exponentialRampToValueAtTime(0.0001, now + 0.005);
-
-  ns.connect(bp1); bp1.connect(g1); g1.connect(ctx.destination);
-  ns.connect(bp2); bp2.connect(g2); g2.connect(ctx.destination);
-  ns.start(now); ns.stop(now + 0.012);
+  // short crisp tap haptic
+  if (navigator.vibrate) navigator.vibrate(3);
 }
 
 // fire on every integer step change across all range inputs
@@ -366,6 +457,7 @@ const I18N = {
   ja: {
     'gear.title':'ギア設定', 'gear.front':'フロント', 'gear.rear':'リア',
     'gear.ratio':'ギア比', 'gear.dev':'開発距離',
+    'tire.circ':'タイヤ周長', 'tire.width':'タイヤ太さ',
     'perf.title':'パフォーマンス', 'perf.cadence':'ケイデンス（フライングラップ）',
     'perf.firstLap':'1周目タイム（手動入力）',
     'env.title':'環境条件', 'env.altitude':'標高', 'env.temp':'気温',
@@ -379,9 +471,9 @@ const I18N = {
     'ev.title':'種目別タイム', 'ev.fly':'⚡ フライングスタート', 'ev.stand':'🚦 スタンディングスタート',
     'ev.laps':'周', 'ev.halves':'本',
     'split.lap':'周', 'split.half':'ハーフ', 'split.dist':'距離',
-    'split.split':'スプリット', 'split.elapsed':'累積',
-    'hist.title':'履歴', 'hist.empty':'まだ記録がありません',
-    'topbar.venue':'バンク未設定', 'topbar.locate':'📍 位置取得', 'topbar.save':'記録する',
+    'split.split':'スプリット', 'split.elapsed':'累積', 'split.lapTarget':'周目標', 'split.delta':'±差',
+    'hist.title':'履歴', 'hist.empty':'まだ記録がありません', 'hist.exportCsv':'⬇ CSV出力',
+    'topbar.venue':'バンク未設定', 'topbar.locate':'📍 位置取得', 'topbar.save':'SAVE',
     'track.label':'周長',
     'badge.altitude':'高地', 'badge.highP':'高気圧',
     'badge.tail':'追い風', 'badge.head':'向かい風', 'badge.wet':'路面ウェット',
@@ -396,6 +488,7 @@ const I18N = {
   en: {
     'gear.title':'Gear', 'gear.front':'Front', 'gear.rear':'Rear',
     'gear.ratio':'Gear ratio', 'gear.dev':'Development',
+    'tire.circ':'Tire circ.', 'tire.width':'Tire width',
     'perf.title':'Performance', 'perf.cadence':'Cadence (flying lap)',
     'perf.firstLap':'1st lap time (manual)',
     'env.title':'Conditions', 'env.altitude':'Altitude', 'env.temp':'Temp',
@@ -409,9 +502,9 @@ const I18N = {
     'ev.title':'Event Times', 'ev.fly':'⚡ Flying start', 'ev.stand':'🚦 Standing start',
     'ev.laps':'laps', 'ev.halves':'halves',
     'split.lap':'Lap', 'split.half':'Half', 'split.dist':'Dist',
-    'split.split':'Split', 'split.elapsed':'Elapsed',
-    'hist.title':'History', 'hist.empty':'No records yet',
-    'topbar.venue':'No venue', 'topbar.locate':'📍 Location', 'topbar.save':'Save',
+    'split.split':'Split', 'split.elapsed':'Elapsed', 'split.lapTarget':'Lap target', 'split.delta':'±Δ',
+    'hist.title':'History', 'hist.empty':'No records yet', 'hist.exportCsv':'⬇ Export CSV',
+    'topbar.venue':'No venue', 'topbar.locate':'📍 Location', 'topbar.save':'SAVE',
     'track.label':'Track',
     'badge.altitude':'Altitude', 'badge.highP':'High P',
     'badge.tail':'Tailwind', 'badge.head':'Headwind', 'badge.wet':'Wet surface',
@@ -452,7 +545,7 @@ function toggleLang() {
 }
 
 // ── constants ─────────────────────────────────────────────────
-const WHEEL = 2.097, P0 = 1013.25, T0 = 288.15;
+const P0 = 1013.25, T0 = 288.15;
 
 const WEATHER_KEYS = ['sunny','cloudy','rain','wind'];
 const WEATHER_PEN  = { sunny:0, cloudy:0, rain:0.015, wind:0 };
@@ -472,6 +565,7 @@ let activeEvKey = '1000';
 let activeRevKey = '1000';
 let venueName   = null;
 let lastCalc    = null;
+let lapOverrides = {}; // { evKey: { lapNum: time } }
 
 // ── utils ─────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
@@ -519,6 +613,9 @@ function calc() {
   const firstT = parseFloat($('firstLap').value) || 22.5;
   const alt    = +$('alt').value;
   const temp   = +$('temp').value;
+  const tireC  = +$('tireC').value;
+  const tireW  = +$('tireW').value;
+  const WHEEL  = tireC / 1000;
 
   // 標準大気圧公式: P(h) = P0 × (1 - 2.25577e-5 × h)^5.25588
   const pres = P0 * Math.pow(1 - 2.25577e-5 * alt, 5.25588);
@@ -528,6 +625,8 @@ function calc() {
   $('vCad').textContent   = cad;
   $('vAlt').textContent   = alt;
   $('vTemp').textContent  = temp;
+  $('vTireC').textContent = tireC;
+  $('vTireW').textContent = tireW;
   if ($('vPres')) $('vPres').textContent = pres.toFixed(0);
 
   document.querySelectorAll('input[type=range]').forEach(syncRange);
@@ -558,7 +657,7 @@ function calc() {
   bEl.innerHTML = '';
   if (alt >= 500) badge(bEl, `⛰ ${alt}m −${((1-rhoR)*100).toFixed(1)}%`, 'ok');
 
-  lastCalc = { front, rear, cad, firstT, alt, temp, gr, dev, vKmh, vF, flyLap, halfLap };
+  lastCalc = { front, rear, cad, firstT, alt, temp, tireC, tireW, WHEEL, gr, dev, vKmh, vF, flyLap, halfLap };
 
   renderAllEvents(firstT, flyLap, vF);
   renderEventDetail(lastCalc);
@@ -599,7 +698,7 @@ function calcReverse() {
     return;
   }
 
-  const { front, rear, alt, temp, firstT } = lastCalc;
+  const { front, rear, alt, temp, firstT, WHEEL } = lastCalc;
   const gr = front / rear;
 
   // air correction factor (same as forward calc)
@@ -697,14 +796,44 @@ function renderAllEvents(firstT, flyLap, vF) {
   });
 }
 
+// per-lap target (cascading override). lap1 = firstT (standing) or flyLap (flying).
+function getLapTime(evKey, lapN, c) {
+  const ovr = lapOverrides[evKey] || {};
+  if (ovr[lapN] != null) return { time: ovr[lapN], src: 'user' };
+  // cascade from largest M < lapN with override
+  let baseTime = null;
+  Object.keys(ovr).map(Number).sort((a,b)=>a-b).forEach(k => {
+    if (k < lapN) baseTime = ovr[k];
+  });
+  if (baseTime != null) return { time: baseTime, src: 'predicted' };
+  // default
+  const ev = EVENTS.find(e => e.key === evKey);
+  if (lapN === 1 && ev && !ev.fly) return { time: c.firstT, src: 'default' };
+  return { time: c.flyLap, src: 'default' };
+}
+
+function onLapEdit(el) {
+  const evKey = activeEvKey;
+  const lap = +el.dataset.lap;
+  const val = parseFloat(el.value);
+  if (!lapOverrides[evKey]) lapOverrides[evKey] = {};
+  if (isFinite(val) && val > 0) {
+    lapOverrides[evKey][lap] = val;
+  } else {
+    delete lapOverrides[evKey][lap];
+  }
+  renderEventDetail(lastCalc);
+}
+
+function clearLapOverrides() {
+  lapOverrides[activeEvKey] = {};
+  renderEventDetail(lastCalc);
+}
+
 function renderEventDetail(c) {
   if (!c) return;
   const ev = EVENTS.find(e => e.key === activeEvKey);
   if (!ev) return;
-
-  const time = evTime(ev, c.firstT, c.flyLap, c.vF);
-  $('evTotalTime').textContent = fmt(time);
-  $('evTotalTime').style.color = ev.color;
 
   const halfLen     = trackLen / 2;
   const totalHalves = ev.dist / halfLen;
@@ -717,39 +846,61 @@ function renderEventDetail(c) {
 
   const tbody = $('splitBody');
   tbody.innerHTML = '';
-  let elapsed = 0, lapNum = 1, halfInLap = 0;
   const totalFullHalves = Math.floor(ev.dist / halfLen);
   const remainder = ev.dist % halfLen;
+  let elapsed = 0;
 
   for (let h = 0; h < totalFullHalves; h++) {
-    const isFirstHalf = h === 0;
-    const splitT = isFirstHalf && !ev.fly ? c.firstT / 2 : c.halfLap;
+    const halfNum = h + 1;
+    const lapNum = Math.ceil(halfNum / 2);
+    const isFirstHalfOfLap = (halfNum % 2 === 1);
+    const isLapEnd = (halfNum % 2 === 0);
+    const { time: lapTime, src } = getLapTime(activeEvKey, lapNum, c);
+    const splitT = lapTime / 2;
     elapsed += splitT;
-    halfInLap++;
-    const distSoFar = (h+1) * halfLen;
-    const isLapEnd = halfInLap === 2 || trackLen === halfLen;
-    if (isLapEnd) halfInLap = 0;
+    const distSoFar = halfNum * halfLen;
+
+    // delta = current gear/cadence-derived lap time vs displayed target
+    const calcLapTime = (lapNum === 1 && !ev.fly) ? c.firstT : c.flyLap;
+    const delta = calcLapTime - lapTime;
+    const showDelta = src !== 'default';
+    const deltaCls = Math.abs(delta) < 0.005 ? 'zero' : (delta > 0 ? 'pos' : 'neg');
+    const deltaText = showDelta ? ((delta >= 0 ? '+' : '') + delta.toFixed(3)) : '';
 
     const tr = document.createElement('tr');
     tr.className = isLapEnd ? 'lap-start' : 'half-row';
+    const lapInputCell = isLapEnd
+      ? `<td><input class="lap-edit lap-edit-${src}" type="number" step="0.001" min="0" value="${lapTime.toFixed(3)}" data-lap="${lapNum}" oninput="onLapEdit(this)" inputmode="decimal"></td>`
+      : '<td></td>';
+    const deltaCell = isLapEnd
+      ? `<td class="lap-delta ${deltaCls}">${deltaText}</td>`
+      : '<td></td>';
     tr.innerHTML = `
-      <td class="lap-num">${isLapEnd ? lapNum++ : ''}</td>
-      <td>${h+1}${isFirstHalf && !ev.fly ? '<span class="start-marker">ST</span>' : ''}</td>
+      <td class="lap-num">${isLapEnd ? lapNum : ''}</td>
+      <td>${halfNum}${isFirstHalfOfLap && lapNum===1 && !ev.fly ? '<span class="start-marker">ST</span>' : ''}</td>
       <td>${distSoFar}m</td>
       <td>${splitT.toFixed(3)}"</td>
       <td class="elapsed">${fmt(elapsed)}</td>
+      ${lapInputCell}
+      ${deltaCell}
     `;
     tbody.appendChild(tr);
   }
 
   if (remainder > 0.1) {
-    const partT = (remainder / halfLen) * c.halfLap;
+    const nextLap = Math.ceil((totalFullHalves + 1) / 2);
+    const { time: lapTime } = getLapTime(activeEvKey, nextLap, c);
+    const partT = (remainder / halfLen) * (lapTime / 2);
     elapsed += partT;
     const tr = document.createElement('tr');
     tr.className = 'half-row';
-    tr.innerHTML = `<td></td><td>+${remainder.toFixed(0)}m</td><td>${ev.dist}m</td><td>${partT.toFixed(3)}"</td><td class="elapsed">${fmt(elapsed)}</td>`;
+    tr.innerHTML = `<td></td><td>+${remainder.toFixed(0)}m</td><td>${ev.dist}m</td><td>${partT.toFixed(3)}"</td><td class="elapsed">${fmt(elapsed)}</td><td></td><td></td>`;
     tbody.appendChild(tr);
   }
+
+  // total event time = actual sum (reflects overrides)
+  $('evTotalTime').textContent = fmt(elapsed);
+  $('evTotalTime').style.color = ev.color;
 }
 
 // ── geolocation ────────────────────────────────────────────────
@@ -827,7 +978,7 @@ out body 3;`;
 async function reverseGeocode(lat,lon) {
   try {
     const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=17`,
-      {headers:{'Accept-Language':'ja,en','User-Agent':'TrackCalcApp/1.0'}});
+      {headers:{'Accept-Language':'ja,en','User-Agent':'VeloDialApp/1.0'}});
     const d = await r.json();
     return d.address?.amenity||d.address?.leisure||d.address?.city||d.address?.town||d.address?.village||d.display_name?.split(',')[0]||null;
   } catch(_){}
@@ -846,7 +997,7 @@ function saveRecord() {
   };
   const hist = getHistory();
   hist.unshift(rec);
-  if (hist.length > 100) hist.pop();
+  while (hist.length > 1000) hist.pop();
   localStorage.setItem('trackHist', JSON.stringify(hist));
   renderHistory();
   const btn = $('saveBtn'), orig = btn.textContent;
@@ -895,6 +1046,35 @@ function deleteRecord(id,e) {
   renderHistory();
 }
 
+function _csvCell(v) {
+  if (v == null) return '';
+  const s = String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function exportCsv() {
+  const hist = getHistory();
+  if (!hist.length) return;
+  const evKeys = ['200m','500m','1km','3km','4km'];
+  const headers = ['date','venue','trackLen','front','rear','ratio','cad','firstT','vKmh','vF','flyLap','halfLap','tireC','tireW','alt','temp','weather', ...evKeys];
+  const rows = [headers.join(',')];
+  hist.forEach(r => {
+    const ratio = r.rear ? (r.front/r.rear).toFixed(3) : '';
+    const evMap = {};
+    (r.events||[]).forEach(e => { evMap[e.name?.replace(' TT','')] = e.time?.toFixed?.(3) ?? e.time; });
+    const vals = [r.date, r.venue, r.trackLen, r.front, r.rear, ratio, r.cad, r.firstT, r.vKmh?.toFixed?.(2), r.vF?.toFixed?.(3), r.flyLap?.toFixed?.(3), r.halfLap?.toFixed?.(3), r.tireC, r.tireW, r.alt, r.temp, r.weather, ...evKeys.map(k => evMap[k] ?? '')];
+    rows.push(vals.map(_csvCell).join(','));
+  });
+  // UTF-8 BOM for Excel JP compatibility
+  const blob = new Blob(['﻿' + rows.join('\r\n')], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  a.href = url; a.download = `velodial-${stamp}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 function loadRecord(rec) {
   trackLen = rec.trackLen;
   document.querySelectorAll('.seg button').forEach(b => b.classList.toggle('active', parseInt(b.textContent)===rec.trackLen));
@@ -905,8 +1085,263 @@ function loadRecord(rec) {
   calc();
 }
 
+// ── gear dial (rotational + buttons) ──────────────────────────
+// realistic chainring/cog SVG generation
+function _arc(r, a) { return [Math.cos(a)*r, Math.sin(a)*r]; }
+function _toPath(pts) { return 'M' + pts.map(p => p.map(v => v.toFixed(2)).join(',')).join(' L') + ' Z'; }
+
+// trapezoidal-tooth annulus (donut with teeth on outside)
+function teethRingPath(N, rPitch, rTip, rRoot, rInner, toothTipFrac=0.42, toothBaseFrac=0.62) {
+  const outer = [];
+  const step = (Math.PI * 2) / N;
+  for (let i = 0; i < N; i++) {
+    const c = i * step;
+    const ht = step * toothTipFrac / 2;
+    const hb = step * toothBaseFrac / 2;
+    // base-left, tip-left, tip-right, base-right (root between teeth)
+    outer.push(_arc(rRoot, c - hb));
+    outer.push(_arc(rTip,  c - ht));
+    outer.push(_arc(rTip,  c + ht));
+    outer.push(_arc(rRoot, c + hb));
+  }
+  // outer path then inner hole (opposite direction for evenodd)
+  let d = _toPath(outer);
+  const inner = [];
+  const Nsmooth = 72;
+  for (let i = Nsmooth; i >= 0; i--) {
+    const a = (i / Nsmooth) * 2 * Math.PI;
+    inner.push(_arc(rInner, a));
+  }
+  d += ' M' + inner.map(p => p.map(v => v.toFixed(2)).join(',')).join(' L') + ' Z';
+  return d;
+}
+
+// Sugino BigZen-style tapered spider arm: wide at ring & hub junction, narrow in middle
+function sugiArm(angle, rHub, rRing, samples=18) {
+  const halfWidthAt = (t) => {
+    // angular half-width (rad). hub → narrow middle → wide ring (trumpet flare)
+    const wHub = 0.085, wMid = 0.038, wRing = 0.18;
+    if (t < 0.45) {
+      const u = t / 0.45;
+      return wHub + (wMid - wHub) * (1 - Math.pow(1-u, 1.8));
+    } else {
+      const u = (t - 0.45) / 0.55;
+      return wMid + (wRing - wMid) * Math.pow(u, 1.6);
+    }
+  };
+  const pts = [];
+  for (let i = 0; i <= samples; i++) {
+    const t = i / samples;
+    const r = rHub + (rRing - rHub) * t;
+    pts.push(_arc(r, angle + halfWidthAt(t)));
+  }
+  for (let i = samples; i >= 0; i--) {
+    const t = i / samples;
+    const r = rHub + (rRing - rHub) * t;
+    pts.push(_arc(r, angle - halfWidthAt(t)));
+  }
+  return _toPath(pts);
+}
+
+function spiderArmsPath(arms, rHub, rRing) {
+  let d = '';
+  for (let i = 0; i < arms; i++) {
+    const a = (i / arms) * 2 * Math.PI - Math.PI/2;
+    d += sugiArm(a, rHub, rRing) + ' ';
+  }
+  return d;
+}
+
+// elliptical lightening cutouts in each arm
+function armCutouts(arms, r, rx, ry, rotate=true) {
+  let s = '';
+  for (let i = 0; i < arms; i++) {
+    const a = (i / arms) * 2 * Math.PI - Math.PI/2;
+    const [x, y] = _arc(r, a);
+    const deg = (a * 180 / Math.PI) + 90;
+    s += `<ellipse class="gear-cutout" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${rx}" ry="${ry}" transform="rotate(${deg.toFixed(2)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+  }
+  return s;
+}
+
+// bolt circle dots
+function boltCircle(arms, r, dotR) {
+  let s = '';
+  for (let i = 0; i < arms; i++) {
+    const a = (i / arms) * 2 * Math.PI - Math.PI/2;
+    const [x, y] = _arc(r, a);
+    s += `<circle class="gear-bolt" cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${dotR}"/>`;
+  }
+  return s;
+}
+
+// freehub splines visual (cog interior)
+function splinesPath(N, rOuter, rInner) {
+  const pts = [];
+  const step = (Math.PI * 2) / N;
+  const fOut = 0.55, fIn = 0.35;
+  for (let i = 0; i < N; i++) {
+    const c = i * step;
+    const ho = step * fOut / 2;
+    const hi = step * fIn / 2;
+    pts.push([_arc(rInner, c - hi), _arc(rOuter, c - ho), _arc(rOuter, c + ho), _arc(rInner, c + hi)]);
+  }
+  return pts.map(p => 'M' + p.map(q => q.map(v=>v.toFixed(2)).join(',')).join(' L') + ' Z').join(' ');
+}
+
+function buildChainringSVG() {
+  // BigZen-style 5-arm chainring
+  const teeth = teethRingPath(22, 40, 44, 37, 32);
+  const spider = spiderArmsPath(5, 9.5, 32);
+  const cutouts = armCutouts(5, 21, 1.5, 4.2, true);
+  const bolts = boltCircle(5, 28, 1.7);
+  // inner relief ring at the spider/teeth junction
+  return `
+    <path class="gear-body" d="${teeth}" fill-rule="evenodd"/>
+    <path class="gear-spider" d="${spider}"/>
+    <circle class="gear-hub" cx="0" cy="0" r="9.5"/>
+    <circle class="gear-hub" cx="0" cy="0" r="6.5"/>
+    <circle class="gear-bore" cx="0" cy="0" r="3.8"/>
+    ${bolts}
+    ${cutouts}
+  `;
+}
+
+function buildCogSVG() {
+  const teeth = teethRingPath(16, 38, 43, 35, 22, 0.5, 0.7);
+  const splines = splinesPath(9, 18, 11);
+  return `
+    <path class="gear-body" d="${teeth}" fill-rule="evenodd"/>
+    <path class="gear-spider" d="${splines}"/>
+    <circle class="gear-bore" cx="0" cy="0" r="6"/>
+  `;
+}
+
+function setDialValue(dial, val) {
+  const min = +dial.dataset.min, max = +dial.dataset.max;
+  val = Math.max(min, Math.min(max, val));
+  if (+dial.dataset.val === val) return false;
+  dial.dataset.val = val;
+  const numEl = dial.querySelector('.gear-num span');
+  if (numEl) numEl.textContent = val;
+  const hiddenId = dial.id === 'frontDial' ? 'front' : 'rear';
+  const h = document.getElementById(hiddenId);
+  if (h) h.value = val;
+  // rotate visual proportional to value position (smooth, optional)
+  const svg = dial.querySelector('.gear-svg');
+  if (svg) {
+    const frac = (val - min) / (max - min);
+    svg.style.transform = `rotate(${frac * 360}deg)`;
+  }
+  return true;
+}
+
+function initDial(dial) {
+  const min = +dial.dataset.min, max = +dial.dataset.max;
+  let startAngle = null, startVal = +dial.dataset.val, lastVal = startVal;
+
+  const getAngle = (e) => {
+    const svg = dial.querySelector('.gear-svg');
+    const rect = svg.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - cx;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - cy;
+    return Math.atan2(y, x) * 180 / Math.PI;
+  };
+
+  const onDown = (e) => {
+    if (e.target.closest('.gear-btn')) return;
+    e.preventDefault();
+    startAngle = getAngle(e);
+    startVal = +dial.dataset.val;
+    lastVal = startVal;
+    if (dial.setPointerCapture && e.pointerId !== undefined) {
+      try { dial.setPointerCapture(e.pointerId); } catch(_){}
+    }
+  };
+
+  const onMove = (e) => {
+    if (startAngle === null) return;
+    e.preventDefault();
+    let delta = getAngle(e) - startAngle;
+    while (delta > 180) delta -= 360;
+    while (delta < -180) delta += 360;
+    // 24° per tooth (15 ticks per full rotation feels mechanical)
+    const deltaT = Math.round(delta / 24);
+    const newVal = Math.max(min, Math.min(max, startVal + deltaT));
+    if (newVal !== lastVal) {
+      lastVal = newVal;
+      setDialValue(dial, newVal);
+      playClick();
+      calc();
+    }
+    // visual continuous rotation tied to drag
+    const svg = dial.querySelector('.gear-svg');
+    if (svg) svg.style.transform = `rotate(${delta}deg)`;
+  };
+
+  const onUp = (e) => {
+    if (startAngle === null) return;
+    startAngle = null;
+    // snap visual to value-based position
+    setDialValue(dial, +dial.dataset.val);
+  };
+
+  const svg = dial.querySelector('.gear-svg');
+  svg.addEventListener('pointerdown', onDown);
+  window.addEventListener('pointermove', onMove);
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', onUp);
+}
+
+function bindGearButtons() {
+  document.querySelectorAll('.gear-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dial = document.getElementById(btn.dataset.dial);
+      const dir = +btn.dataset.dir;
+      if (setDialValue(dial, +dial.dataset.val + dir)) {
+        playClick();
+        calc();
+      }
+    });
+  });
+}
+
+function initGears() {
+  // build realistic gear visuals
+  const svgF = document.getElementById('svgFront');
+  const svgR = document.getElementById('svgRear');
+  if (svgF) svgF.innerHTML = buildChainringSVG();
+  if (svgR) svgR.innerHTML = buildCogSVG();
+  // init dials
+  document.querySelectorAll('.gear-dial').forEach(initDial);
+  bindGearButtons();
+  // initial visual
+  document.querySelectorAll('.gear-dial').forEach(d => setDialValue(d, +d.dataset.val));
+}
+
+// ── theme toggle ──────────────────────────────────────────────
+function applyTheme(t) {
+  if (t === 'outdoor') document.body.setAttribute('data-theme', 'outdoor');
+  else document.body.removeAttribute('data-theme');
+  const btn = document.getElementById('themeBtn');
+  if (btn) btn.textContent = (t === 'outdoor') ? '☀' : '☾';
+  // theme-color meta
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', t === 'outdoor' ? '#ffffff' : '#0a0a10');
+}
+function toggleTheme() {
+  const cur = localStorage.getItem('theme') || 'dark';
+  const next = cur === 'dark' ? 'outdoor' : 'dark';
+  localStorage.setItem('theme', next);
+  applyTheme(next);
+}
+applyTheme(localStorage.getItem('theme') || 'dark');
+
 // ── init ───────────────────────────────────────────────────────
 applyLang();
+initGears();
 calc();
 renderHistory();
 

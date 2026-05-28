@@ -1,8 +1,8 @@
 {
-  "name": "Track Calc",
-  "short_name": "TrackCalc",
-  "description": "Track cycling goal time calculator",
-  "start_url": "./",
+  "name": "VeloDial",
+  "short_name": "VeloDial",
+  "description": "Track cycling gear & goal time calculator",
+  "start_url": "./track-calc.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
