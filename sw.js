@@ -1,4 +1,4 @@
-const CACHE = 'track-calc-v2';
+const CACHE = 'track-calc-v4';
 const ASSETS = [
   './',
   './index.html',

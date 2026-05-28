@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>VeloDial</title>
 <link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0a0a10">
+<meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="VeloDial">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <style>
@@ -1332,12 +1332,12 @@ function applyTheme(t) {
   if (meta) meta.setAttribute('content', t === 'outdoor' ? '#ffffff' : '#0a0a10');
 }
 function toggleTheme() {
-  const cur = localStorage.getItem('theme') || 'dark';
-  const next = cur === 'dark' ? 'outdoor' : 'dark';
+  const cur = localStorage.getItem('theme') || 'outdoor';
+  const next = cur === 'outdoor' ? 'dark' : 'outdoor';
   localStorage.setItem('theme', next);
   applyTheme(next);
 }
-applyTheme(localStorage.getItem('theme') || 'dark');
+applyTheme(localStorage.getItem('theme') || 'outdoor');
 
 // ── init ───────────────────────────────────────────────────────
 applyLang();
